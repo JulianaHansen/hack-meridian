@@ -1,6 +1,6 @@
 #![no_std]
 
-use soroban_sdk::{contract, contractimpl};
+use soroban_sdk::{contract, contractimpl, Env, Address, BytesN, Symbol};
 
 mod storage;
 mod badge;
@@ -27,8 +27,22 @@ pub struct PoapBadge;
 #[contractimpl]
 impl PoapBadge {
     // importa funções de event.rs
-    pub fn create_event(env: soroban_sdk::Env, event_id: soroban_sdk::BytesN<32>, organizer: soroban_sdk::Address, metadata: soroban_sdk::Symbol) {
-        event::create_event(env, event_id, organizer, metadata);
+    pub fn create_event(
+        env: Env,
+        event_id: BytesN<32>,
+        organizer: Address,
+        name: Symbol,
+        description: Symbol,
+        image: Symbol,
+    ) {
+        event::create_event(
+            env,
+            event_id,
+            organizer,
+            name,
+            description,
+            image,
+        );
     }
 
     // importa funções de badge.rs

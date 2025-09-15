@@ -1,20 +1,24 @@
-use soroban_sdk::{Env, Address, BytesN, Vec};
+use soroban_sdk::{Env, Address, BytesN, Vec, Symbol};
 use crate::storage;
 
 pub fn mint_badge(env: Env, event_id: BytesN<32>, recipient: Address) {
-    // lista de badges do usuário
-    let mut badges = storage::get_user_badges(&env, &recipient);
-    if !badges.contains(&event_id) {
-        badges.push_back(event_id.clone());
-        storage::set_user_badges(&env, &recipient, &badges);
-    }
+    // adicionar badge ao usuário
+        let mut user_badges: Vec<BytesN<32>> =
+            env.storage().persistent().get((&Symbol::short("user_badges"), &recipient))
+            .unwrap_or(Vec::new(&env));
+        if !user_badges.contains(&event_id) {
+            user_badges.push_back(event_id.clone());
+            env.storage().persistent().set((&Symbol::short("user_badges"), &recipient), user_badges);
+        }
 
-    // lista de owners do evento
-    let mut owners = storage::get_event_owners(&env, &event_id);
-    if !owners.contains(&recipient) {
-        owners.push_back(recipient.clone());
-        storage::set_event_owners(&env, &event_id, &owners);
-    }
+        // adicionar usuário na lista de owners do evento
+        let mut owners: Vec<Address> =
+            env.storage().persistent().get((&Symbol::short("event_owners"), &event_id))
+            .unwrap_or(Vec::new(&env));
+        if !owners.contains(&recipient) {
+            owners.push_back(recipient.clone());
+            env.storage().persistent().set((&Symbol::short("event_owners"), &event_id), owners);
+        }
 }
 
 pub fn list_user_badges(env: Env, user: Address) -> Vec<BytesN<32>> {
