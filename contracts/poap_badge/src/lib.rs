@@ -55,6 +55,6 @@ impl PoapBadge {
     }
 
     pub fn list_event_owners(env: soroban_sdk::Env, event_id: soroban_sdk::BytesN<32>) -> soroban_sdk::Vec<soroban_sdk::Address> {
-        badge::list_event_owners(env, event_id)
+        event::list_event_owners(env, event_id)
     }
 }

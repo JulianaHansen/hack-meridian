@@ -1,4 +1,5 @@
 use soroban_sdk::{Env, Address, BytesN, Symbol, Vec, symbol_short, contracttype};
+use crate::storage;
 
 #[derive(Clone)]
 #[contracttype]
@@ -8,6 +9,7 @@ pub struct EventMetadata {
     pub image: Symbol, // URL/IPFS hash
 }
 
+// Função para criar um novo evento
 pub fn create_event(
     env: Env,
     event_id: BytesN<32>,
@@ -40,6 +42,7 @@ pub fn create_event(
     );
 }
 
+// Listar todos os eventos
 pub fn list_events(env: Env) -> Vec<BytesN<32>> {
     env.storage()
         .persistent()
@@ -47,9 +50,15 @@ pub fn list_events(env: Env) -> Vec<BytesN<32>> {
         .unwrap_or(Vec::new(&env))
 }
 
+// Obter metadados de um evento específico
 pub fn get_event_metadata(env: Env, event_id: BytesN<32>) -> EventMetadata {
     env.storage()
         .persistent()
         .get(&(&symbol_short!("em"), &event_id))
         .unwrap()
+}
+
+// Listar todos os donos de badges de um evento específico
+pub fn list_event_owners(env: Env, event_id: BytesN<32>) -> Vec<Address> {
+    storage::get_event_owners(&env, &event_id)
 }
