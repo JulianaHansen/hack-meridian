@@ -1,0 +1,30 @@
+version: "3.9"
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: docker/backend.Dockerfile
+    volumes:
+      - ./backend:/app
+    ports:
+      - "4000:4000"
+    depends_on:
+      - contracts
+
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend.Dockerfile
+    volumes:
+      - ./frontend:/app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+  contracts:
+    build:
+      context: .
+      dockerfile: docker/contracts.Dockerfile
+    volumes:
+      - ./contracts:/app
