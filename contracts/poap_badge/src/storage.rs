@@ -9,7 +9,7 @@ pub struct BadgeInfo {
     pub metadata: EventMetadata,
 }
 
-// Pega as badges (eventos) de um usuário
+// Lista as badges de um usuário
 pub fn get_user_badges(env: &Env, user: &Address) -> Vec<BytesN<32>> {
     env.storage()
         .persistent()
