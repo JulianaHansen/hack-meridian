@@ -21,6 +21,13 @@ pub fn add_user_badge(env: &Env, user: &Address, badge: &BytesN<32>) {
     }
 }
 
+pub fn list_all_badges(env: &Env) -> Vec<BytesN<32>> {
+    env.storage()
+        .persistent()
+        .get(&Symbol::new(env, "ev"))
+        .unwrap_or(Vec::new(env))
+}
+
 // |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
 pub fn get_event_owners(env: &Env, event_id: &BytesN<32>) -> Vec<Address> {
