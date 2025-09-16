@@ -17,18 +17,16 @@ pub fn get_user_badges(env: &Env, user: &Address) -> Vec<BytesN<32>> {
         .unwrap_or(Vec::new(env))
 }
 
-pub fn set_user_badges(env: &Env, user: &Address, badges: &Vec<BytesN<32>>) {
-    env.storage()
-        .persistent()
-        .set(&(Symbol::new(env, "ub"), user.clone()), badges);
-}
-
 // Adiciona uma badge (evento) a um usuário
 pub fn add_user_badge(env: &Env, user: &Address, badge: &BytesN<32>) {
     let mut badges = get_user_badges(env, user);
+
     if !badges.contains(badge) {
         badges.push_back(badge.clone());
-        set_user_badges(env, user, &badges);
+        
+        env.storage()
+            .persistent()
+            .set(&(Symbol::new(env, "ub"), user.clone()), &badges);
     }
 }
 
